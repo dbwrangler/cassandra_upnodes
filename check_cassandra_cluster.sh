@@ -126,7 +126,7 @@ fi
 # begin script
 # ------------------------------------------------------------
 # check the number of live node, status and performance
-node_count=$(dsetool status|grep "%"|wc -l)
+node_count=$(dsetool status|grep $datacenter|wc -l)
 live_node=$(dsetool -h $host -j $port status|grep $datacenter|grep -c 'Up')
 verbose=($(dsetool -h $host -j $port status|grep $datacenter| awk '/Up/ {print $1":"$5","$6","$7$8","$9 " " }'))
 performance=($(dsetool -h $host -j $port status|grep $datacenter| awk '/Up/ {print "Load_"$1"="$9",Owns_"$1"="$9}'))
