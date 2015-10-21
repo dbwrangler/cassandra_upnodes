@@ -53,10 +53,6 @@ date=$(date '+%Y%m%d')
 host="localhost"
 port="7199"
 
-#PROGNAME=`basename $0`
-#PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
-#REVISION=`echo '$Revision: 1749 $' | sed -e 's/[^0-9.]//g'`
-# . /usr/local/nagios/libexec/utils.sh
 
 # option definitions
 while getopts "d:c:w:H:P:hV" opt ; do
@@ -126,13 +122,13 @@ fi
 # begin script
 # ------------------------------------------------------------
 # check the number of live node, status and performance
+
 node_count=$(dsetool status|grep $datacenter|wc -l)
 live_node=$(dsetool -h $host -j $port status|grep $datacenter|grep -c 'Up')
 verbose=($(dsetool -h $host -j $port status|grep $datacenter| awk '/Up/ {print $1":"$5","$6","$7$8","$9 " " }'))
 performance=($(dsetool -h $host -j $port status|grep $datacenter| awk '/Up/ {print "Load_"$1"="$9",Owns_"$1"="$9}'))
 unavailable_nodes=$(($node_count-$live_node))
 
-# echo "N " $node_count " L " $live_node " V " $verbose " P " $performance " UA " $unavailable_nodes
 # unless live node is number, reply unknown code
 expr $live_node + 1 >/dev/null 2>&1
 if [ "$?" -lt 2 ]; then
